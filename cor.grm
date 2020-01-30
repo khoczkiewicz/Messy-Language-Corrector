@@ -1,0 +1,16 @@
+
+letter = "a"|"ą"|"b"|"c"|"ć"|"d"|"e"|"ę"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"ł"|"m"|"n"|"ń"|"o"|"ó"|"p"|"r"|"s"|"ś"|"t"|"u"|"w"|"y"|"z"|"ź"|"ż";
+
+export dictionary = StringFile['testwords'];
+
+copy = letter<0>;
+
+replacements = ( ("a":"ą") | ("ą":"a") | ("c":"ć") | ("ć":"c") | ("ch":"h") | ("h":"ch") | ("e":"ę") | ("ę":"e") | ("l":"ł") | ("ł":"l") | ("n":"ń") | ("ń":"n") | ("o":"ó") | ("ó":"o")| ("u":"ó") | ("ó":"u") | ("s":"ś") | ("ś":"s") | ("sz":"rz") | ("rz":"sz") | ("rz":"ż") | ("ż":"rz") | ("z":"ż") | ("ż":"z") )<1> ;
+
+export correct = (letter|replacements)*;
+
+export corrector = Optimize[Invert[dictionary @ correct]];
+
+export expand = letter* ("":(letter*)) ;
+
+export complete = correct @ expand @ dictionary ;

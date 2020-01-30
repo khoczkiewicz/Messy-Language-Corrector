@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo -e "Searching for \"$1\" match...\n"
+
+segments=($(ls dictionary-splitted | grep ^segment))
+for segment in ${segments[@]}
+do
+    cp dictionary-splitted/${segment} test 
+    ruby test.rb | bash
+    
+    firstWord = `more testwords | head -1`
+    echo -e "\n# ${segment} - searching..."
+    
+    thraxmakedep cor.grm | make
+    result=`thraxrewrite-tester --noutput=10 --far=cor.far --rules=corrector <<< $1`
+    if [[ $result == *"Rewrite failed."* ]]; then
+        continue
+    fi
+    echo ${result//"Input string:"/}
+    exit
+done
+
+echo "Error: \"$1\" not found!"
